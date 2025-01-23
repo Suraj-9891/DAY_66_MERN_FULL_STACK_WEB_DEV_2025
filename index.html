@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compass</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            color: #333;
+        }
+
+        .compass-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            border: 3px solid #333;
+            border-radius: 50%;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .compass {
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+        }
+
+        .cardinal-points {
+            position: absolute;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+        }
+
+        .north { top: 5%; left: 50%; transform: translateX(-50%); }
+        .south { bottom: 5%; left: 50%; transform: translateX(-50%); }
+        .east { right: 5%; top: 50%; transform: translateY(-50%); }
+        .west { left: 5%; top: 50%; transform: translateY(-50%); }
+
+        .needle {
+            margin-top: -100px;
+            position: absolute;
+            width: 5px;
+            height: 40%;
+            border-radius: 20PX;
+            background: red;
+            transform-origin: bottom center;
+            animation: rotateNeedle 1s linear infinite;
+        }
+
+        .live-output {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .live-output p {
+            margin: 5px 0;
+            font-size: 1rem;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .compass-container {
+                width: 300px;
+                height: 300px;
+            }
+
+            .needle {
+                height: 40%;
+            }
+        }
+
+        #direction{
+            font-size: 20px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            color: rgb(221, 100, 13);
+            font-weight: bold;
+        }
+        #angle{
+            font-size: 20px;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            color: rgb(63, 18, 174);
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        footer{
+            font-size: 20px;
+            font-weight: bold;
+            
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Compass Online</h1>
+</header>
+
+<main>
+    <div class="compass-container">
+        <div class="cardinal-points north">N</div>
+        <div class="cardinal-points south">S</div>
+        <div class="cardinal-points east">E</div>
+        <div class="cardinal-points west">W</div>
+        <div class="needle" id="needle"></div>
+    </div>
+
+    <div class="live-output">
+        <p id="direction">Direction: N</p>
+        <p id="angle">Angle: 0°</p>
+    </div>
+
+    <button id="reset-btn">Reset</button>
+</main>
+
+<footer>
+    <p>Created by Suraj Kumar | Powered by JavaScript & CSS</p>
+</footer>
+
+<script>
+    const needle = document.getElementById('needle');
+    const directionDisplay = document.getElementById('direction');
+    const angleDisplay = document.getElementById('angle');
+
+    if (window.DeviceOrientationEvent) {
+        window.addEventListener('deviceorientation', (event) => {
+            const { alpha } = event;
+            const angle = Math.round(alpha);
+
+            needle.style.transform = `rotate(${angle}deg)`;
+
+            const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+            const index = Math.round(angle / 45) % 8;
+            directionDisplay.textContent = `Direction: ${directions[index]}`;
+            angleDisplay.textContent = `Angle: ${angle}°`;
+        });
+    } else {
+        directionDisplay.textContent = "Device orientation not supported.";
+    }
+
+    document.getElementById('reset-btn').addEventListener('click', () => {
+        needle.style.transform = 'rotate(0deg)';
+        directionDisplay.textContent = 'Direction: N';
+        angleDisplay.textContent = 'Angle: 0°';
+    });
+</script>
+
+</body>
+</html>
